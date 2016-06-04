@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'log.apps.LogConfig',
     'client.apps.ClientConfig',
+    'individual.apps.IndividualConfig',
 ]
 
 MIDDLEWARE_CLASSES = [
