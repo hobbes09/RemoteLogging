@@ -24,6 +24,9 @@ class Client(models.Model):
     def __str__(self):
         return (self.id.__str__() + "<->" + self.app_name.__str__())
 
+    def __unicode__(self):
+        return self.slug
+
     def save(self, *args, **kwargs):
         if not self.id:
             # Newly created object, so smet slug
