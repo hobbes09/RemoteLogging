@@ -2,25 +2,36 @@ from django.db import models
 import uuid
 import string
 import random
+import datetime
 from django.template.defaultfilters import slugify
 
 # Create your models here.
 
 class Client(models.Model):
-    id = models.CharField(max_length=100, primary_key=True, unique=True, default=uuid.uuid4)
-    created = models.DateTimeField(auto_now_add=True)
-    slug = models.SlugField(unique=True, blank=False, help_text='This field is autofilled while saving.')
+    id = models.CharField(primary_key=True, unique=True, max_length=200, blank=False, editable=False)
+    slug = models.SlugField(unique=True, blank=False, editable=False, help_text='This field is autofilled while saving.')
     company_name = models.CharField(max_length=100, blank=False)
     app_name = models.CharField(max_length=100, blank=False)
     package_name = models.CharField(max_length=100, blank=False)
+    created_at = models.DateTimeField(editable=False)
+    updated_at = models.DateTimeField(editable=False)
+
+    readonly_fields = ('id', 'slug')
 
     class Meta:
-        ordering = ('created',)
+        ordering = ('created_at',)
+
+    def __str__(self):
+        return (self.id.__str__() + "<->" + self.app_name.__str__())
 
     def save(self, *args, **kwargs):
         if not self.id:
-            # Newly created object, so set slug
+            # Newly created object, so smet slug
+            self.id = uuid.uuid4()
             self.slug = slugify(self.app_name) + '-' + id_generator()
+            self.created_at = datetime.datetime.today()
+
+        self.updated_at = datetime.datetime.today()
         super(Client, self).save(*args, **kwargs)
 
 
