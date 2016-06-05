@@ -4,7 +4,16 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from client.models import Client
+from .utils import create_individual_from_request
 
+
+def getClientIdFromSlug(slug):
+    try:
+        client = Client.objects.get(slug=slug)
+        return client.id
+    except Client.DoesNotExist:
+        return ''
 
 class IndividualList(APIView):
     """
@@ -16,11 +25,15 @@ class IndividualList(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = IndividualSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        individual = create_individual_from_request(request)
+        if individual is None:
+            return Response(data="Invalid Request", status=status.HTTP_400_BAD_REQUEST, content_type="text/html")
+
+        try:
+            individual.save
+            return Response(data="Successfully created individual instance", status=status.HTTP_201_CREATED, content_type="text/html")
+        except Exception:
+            return Response(data="Invalid Request Data", status=status.HTTP_400_BAD_REQUEST, content_type="text/html")
 
 
 class IndividualDetail(APIView):
