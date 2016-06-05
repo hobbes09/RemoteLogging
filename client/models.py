@@ -29,12 +29,12 @@ class Client(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            # Newly created object, so smet slug
+            # Newly created object, so adding slug
             self.id = uuid.uuid4()
             self.slug = slugify(self.app_name) + '-' + id_generator()
-            self.created_at = datetime.datetime.today()
+            self.created_at = datetime.datetime.utcnow()
 
-        self.updated_at = datetime.datetime.today()
+        self.updated_at = datetime.datetime.utcnow()
         super(Client, self).save(*args, **kwargs)
 
 

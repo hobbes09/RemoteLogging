@@ -19,13 +19,13 @@ class Individual(models.Model):
         ordering = ('created_at',)
 
     def __str__(self):
-        return (self.id.__str__() + "<->" + self.external_id.__str__())
+        return (self.id.__str__() + "<->" + self.external_id)
 
     def save(self, *args, **kwargs):
         if not self.id:
             # Newly created object, so smet slug
             self.id = uuid.uuid4()
-            self.created_at = datetime.datetime.today()
+            self.created_at = datetime.datetime.utcnow()
 
-        self.updated_at = datetime.datetime.today()
+        self.updated_at = datetime.datetime.utcnow()
         super(Individual, self).save(*args, **kwargs)
