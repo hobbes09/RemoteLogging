@@ -52,12 +52,13 @@ class IndividualDetail(APIView):
         return Response(serializer.data)
 
     def put(self, request, ext_id, format=None):
-        individual = self.get_object(ext_id)
-        serializer = IndividualSerializer(individual, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data="Updating is disabled for Individuals for now", status=status.HTTP_400_BAD_REQUEST, content_type="text/html")
+        # individual = self.get_object(ext_id)
+        # serializer = IndividualSerializer(individual, data=request.data)
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     return Response(serializer.data)
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, ext_id, format=None):
         individual = self.get_object(ext_id)
