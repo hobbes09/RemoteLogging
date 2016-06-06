@@ -6,5 +6,5 @@ class SessionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Session
-        fields = ('id', 'individual_id', 'context', 'status', 'started_at', 'ended_at', 'created_at', 'updated_at')
+        fields = ('id', 'individual_id', 'context', 'status', 'type', 'started_at', 'ended_at', 'created_at', 'updated_at')
 
