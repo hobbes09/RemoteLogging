@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'log.apps.LogConfig',
     'client.apps.ClientConfig',
     'individual.apps.IndividualConfig',
+    'session.apps.SessionConfig'
 ]
 
 MIDDLEWARE_CLASSES = [
