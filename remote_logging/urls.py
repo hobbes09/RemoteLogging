@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^', include('client.urls')),
     url(r'^', include('individual.urls')),
     url(r'^', include('log.urls')),
+    url(r'^', include('session.urls')),
 ]
