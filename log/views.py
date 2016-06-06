@@ -4,6 +4,7 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from .utils import create_log_from_request
 
 
 class LogList(APIView):
@@ -16,11 +17,16 @@ class LogList(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = LogSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        log, error_message = create_log_from_request(request)
+        if log is None:
+            return Response(data="Invalid Request." + error_message, status=status.HTTP_400_BAD_REQUEST, content_type="text/html")
+
+        try:
+            log.save
+            return Response(data="Successfully created log instance", status=status.HTTP_201_CREATED, content_type="text/html")
+        except Exception:
+            return Response(data="Invalid Request Data", status=status.HTTP_400_BAD_REQUEST, content_type="text/html")
+
 
 
 class LogDetail(APIView):
