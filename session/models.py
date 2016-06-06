@@ -8,11 +8,22 @@ SESSION_STATUS = (
     ('INACTIVE', 'SESSION_OFF')
 )
 
+SESSION_TYPES = (
+    ('A', 'ASSERT'),
+    ('D', 'DEBUG'),
+    ('E', 'ERROR'),
+    ('I', 'INFO'),
+    ('V', 'VERBOSE'),
+    ('W', 'WARN'),
+    ('ALL', 'ALL_LOGS')
+)
+
 class Session(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=200, blank=False, editable=False)
     individual = models.ForeignKey(Individual, on_delete=models.CASCADE, verbose_name="individual")
     context = models.TextField()
-    status = models.CharField(choices=SESSION_STATUS, default='INACTIVE', max_length=64)
+    status = models.CharField(choices=SESSION_STATUS, default='INACTIVE', max_length=64, blank=False, null=False)
+    type = models.CharField(choices=SESSION_TYPES, default='V', max_length=64, blank=False, null=False)
     started_at = models.DateTimeField(null=True, blank=True)
     ended_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(editable=False)
