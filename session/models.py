@@ -3,12 +3,18 @@ from individual.models import Individual
 import uuid
 import datetime
 
+SESSION_STATUS = (
+    ('ACTIVE', 'SESSION_ON'),
+    ('INACTIVE', 'SESSION_OFF')
+)
+
 class Session(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=200, blank=False, editable=False)
     individual = models.ForeignKey(Individual, on_delete=models.CASCADE, verbose_name="individual")
     context = models.TextField()
-    started_at = models.DateTimeField()
-    ended_at = models.DateTimeField()
+    status = models.CharField(choices=SESSION_STATUS, default='INACTIVE', max_length=64)
+    started_at = models.DateTimeField(null=True, blank=True)
+    ended_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(editable=False)
     updated_at = models.DateTimeField(editable=False)
 
@@ -24,5 +30,6 @@ class Session(models.Model):
             self.id = uuid.uuid4()
             self.created_at = datetime.datetime.utcnow()
 
+        #TODO: Establish relation and validations between started_at, ended_at and status
         self.updated_at = datetime.datetime.utcnow()
         super(Session, self).save(*args, **kwargs)
