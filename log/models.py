@@ -19,7 +19,7 @@ class Log(models.Model):
     created = models.DateTimeField(editable=False)
     body = models.TextField()
     type = models.CharField(choices=LOG_TYPES, default='V', max_length=100)
-    individual = models.ForeignKey(Individual, on_delete=models.CASCADE, verbose_name="individual", )
+    individual = models.ForeignKey(Individual, on_delete=models.CASCADE, verbose_name="individual")
 
     class Meta:
         ordering = ('created',)
