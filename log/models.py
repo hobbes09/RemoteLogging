@@ -31,6 +31,6 @@ class Log(models.Model):
         if not self.id:
             # Newly created object, so adding slug
             self.id = uuid.uuid4()
-            self.created_at = datetime.datetime.utcnow()
+            self.created = datetime.datetime.utcnow()
 
         super(Log, self).save(*args, **kwargs)
