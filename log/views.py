@@ -5,6 +5,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .utils import create_log_from_request
+from django.http import JsonResponse
+from .entities import LogPostResponse
+import json
 
 
 class LogList(APIView):
@@ -19,13 +22,21 @@ class LogList(APIView):
     def post(self, request, format=None):
         log, error_message = create_log_from_request(request)
         if log is None:
-            return Response(data="Invalid Request." + error_message, status=status.HTTP_400_BAD_REQUEST, content_type="text/html")
+            log_post_response = LogPostResponse(message="Invalid Request. " + error_message, status='INACTIVE')
+            return JsonResponse(json.loads(json.dumps(log_post_response.__dict__)), status=status.HTTP_400_BAD_REQUEST, content_type="application/json")
+
+        # Check if the session is still active
+        if (log.session.status == 'INACTIVE'):
+            log_post_response = LogPostResponse(message="Session Expired. ", status='INACTIVE')
+            return JsonResponse(json.loads(json.dumps(log_post_response.__dict__)), status=status.HTTP_200_OK, content_type="application/json")
 
         try:
             log.save
-            return Response(data="Successfully created log instance", status=status.HTTP_201_CREATED, content_type="text/html")
+            log_post_response = LogPostResponse(message="Successfully created log instance. ", status='ACTIVE')
+            return JsonResponse(json.loads(json.dumps(log_post_response.__dict__)), status=status.HTTP_201_CREATED, content_type="application/json")
         except Exception:
-            return Response(data="Invalid Request Data", status=status.HTTP_400_BAD_REQUEST, content_type="text/html")
+            log_post_response = LogPostResponse(message="Invalid Request Data. ", status='INACTIVE')
+            return JsonResponse(json.loads(json.dumps(log_post_response.__dict__)), status=status.HTTP_400_BAD_REQUEST, content_type="application/json")
 
 
 
