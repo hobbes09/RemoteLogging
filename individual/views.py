@@ -20,7 +20,7 @@ def get_individual_logging_status(request, ext_id, format=None):
     except Exception as e:
         individual = None
         exception = e
-        
+
     if(individual is None):
         return JsonResponse({"error": "Invalid Request"}, status=status.HTTP_400_BAD_REQUEST, content_type="application/json")
 
@@ -32,7 +32,7 @@ def get_individual_logging_status(request, ext_id, format=None):
     else:
         individual_status = IndividualStatus(individual_id=ext_id, session_id=None, status='INACTIVE', type=None)
 
-    return JsonResponse(json.loads(json.dumps(individual_status.__dict__)), status=status.HTTP_201_CREATED, content_type="application/json")
+    return JsonResponse(json.loads(json.dumps(individual_status.__dict__)), status=status.HTTP_200_OK, content_type="application/json")
 
 
 
