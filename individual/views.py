@@ -22,7 +22,7 @@ def get_individual_logging_status(request, ext_id, format=None):
         exception = e
 
     if(individual is None):
-        return JsonResponse({"error": "Invalid Request"}, status=status.HTTP_400_BAD_REQUEST, content_type="application/json")
+        return JsonResponse({"message": "No such user added"}, status=status.HTTP_204_NO_CONTENT, content_type="application/json")
 
     sessions = Session.objects.filter(individual=individual, status='ACTIVE').order_by('-updated_at')
 
@@ -33,7 +33,6 @@ def get_individual_logging_status(request, ext_id, format=None):
         individual_status = IndividualStatus(individual_id=ext_id, session_id=None, status='INACTIVE', type=None)
 
     return JsonResponse(json.loads(json.dumps(individual_status.__dict__)), status=status.HTTP_200_OK, content_type="application/json")
-
 
 
 def get_client_id_from_slug(slug):
