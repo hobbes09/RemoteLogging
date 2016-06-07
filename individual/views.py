@@ -1,4 +1,5 @@
 from .models import Individual
+from session.models import Session
 from .serializers import IndividualSerializer
 from django.http import Http404
 from rest_framework.views import APIView
@@ -6,9 +7,36 @@ from rest_framework.response import Response
 from rest_framework import status
 from client.models import Client
 from .utils import create_individual_from_request
+from .entities import IndividualStatus
+from django.http import JsonResponse
+import json
 
 
-def getClientIdFromSlug(slug):
+def get_individual_logging_status(request, ext_id, format=None):
+    exception = None
+    individual_status = None
+    try:
+        individual = Individual.objects.get(external_id=ext_id)
+    except Exception as e:
+        individual = None
+        exception = e
+        
+    if(individual is None):
+        return JsonResponse({"error": "Invalid Request"}, status=status.HTTP_400_BAD_REQUEST, content_type="application/json")
+
+    sessions = Session.objects.filter(individual=individual, status='ACTIVE').order_by('-updated_at')
+
+    if(len(sessions) > 0):
+        session = sessions[0]
+        individual_status = IndividualStatus(individual_id=ext_id, session_id=session.id, status=session.status, type=session.type)
+    else:
+        individual_status = IndividualStatus(individual_id=ext_id, session_id=None, status='INACTIVE', type=None)
+
+    return JsonResponse(json.loads(json.dumps(individual_status.__dict__)), status=status.HTTP_201_CREATED, content_type="application/json")
+
+
+
+def get_client_id_from_slug(slug):
     try:
         client = Client.objects.get(slug=slug)
         return client.id
