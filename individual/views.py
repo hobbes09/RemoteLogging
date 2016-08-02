@@ -35,13 +35,6 @@ def get_individual_logging_status(request, ext_id, format=None):
     return JsonResponse(json.loads(json.dumps(individual_status.__dict__)), status=status.HTTP_200_OK, content_type="application/json")
 
 
-def get_client_id_from_slug(slug):
-    try:
-        client = Client.objects.get(slug=slug)
-        return client.id
-    except Client.DoesNotExist:
-        return ''
-
 class IndividualList(APIView):
     """
     List all snippets, or create a new snippet.
@@ -79,7 +72,8 @@ class IndividualDetail(APIView):
         return Response(serializer.data)
 
     def put(self, request, ext_id, format=None):
-        return Response(data="Updating is disabled for Individuals for now", status=status.HTTP_400_BAD_REQUEST, content_type="text/html")
+        return Response(data="Updating is disabled for Individuals for now",
+                        status=status.HTTP_400_BAD_REQUEST, content_type="text/html")
         # individual = self.get_object(ext_id)
         # serializer = IndividualSerializer(individual, data=request.data)
         # if serializer.is_valid():
